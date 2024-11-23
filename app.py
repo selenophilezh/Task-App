@@ -2,6 +2,7 @@ import sqlite3
 import pandas as pd
 import streamlit as st
 from datetime import datetime
+import time
 
 # Database setup
 conn = sqlite3.connect("task_tracker_dummy_v2.db")
@@ -83,19 +84,20 @@ with tab3:
 
                 # Update Task
                 if st.button("Update Task"):
-                    cursor.execute('''
+                    cursor.execute(''' 
                         UPDATE tasks
                         SET task_name = ?, task_date = ?, analyst = ?, supervisor = ?, status = ?, workfile = ?, path = ?, remark = ?
                         WHERE id = ?
                     ''', (edit_task_name, edit_task_date, edit_analyst, edit_supervisor, edit_status, edit_workfile, edit_path, edit_remark, selected_id))
                     conn.commit()
                     st.success("Task updated successfully!")
+                    time.sleep(3)
+                    st.rerun()  # Refresh to show the updated data
             else:
                 st.warning(f"No task found with ID {selected_id}!")
 
         except ValueError:
             st.error("Please enter a valid numeric Task ID!")
-
 
 
 # Close the database connection
